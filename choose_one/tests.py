@@ -8,16 +8,16 @@ from authentication.models import User
 
 class BaseAPITest(APITestCase):
 
-    def create(self, email='test@mail.com', password='qwerty123456'):
-        user = User.objects.create_user(email=email, password=password)
+    def create(self, email='test@mail.com', username='testuser', password='qwerty123456'):
+        user = User.objects.create_user(email=email, username=username, password=password)
         user.last_login_date = timezone.now()
         user.is_active = True
         user.save()
 
         return user
 
-    def create_and_login(self, email='test@mail.com', password='qwerty123456'):
-        user = self.create(email=email, password=password)
+    def create_and_login(self, email='test@mail.com', username='testuser', password='qwerty123456'):
+        user = self.create(email=email, username=username, password=password)
         self.authorize(user)
         return user
 

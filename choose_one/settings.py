@@ -286,3 +286,5 @@ CELERY_BROKER_URL = os.environ.get('BROKER_URL', '')
 CELERY_TASK_DEFAULT_QUEUE = "django"
 
 CELERY_TASK_SOFT_TIME_LIMIT = int(os.environ.get('TASK_SOFT_TIME_LIMIT_SEC', 40))
+
+USER_ACTIVATION_URL = os.environ.get('USER_ACTIVATION_URL', 'http://localhost')
