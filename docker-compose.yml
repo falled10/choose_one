@@ -1,0 +1,61 @@
+version: '3'
+services:
+  api:
+    build: .
+    env_file:
+      - .env/vars
+    volumes:
+      - .:/app
+      - ./assets:/app/assets
+      - ./media:/app/media
+    depends_on:
+      - postgres
+      - redis
+  celery:
+    build: .
+    command: celery -A choose_one worker -l info
+    env_file:
+      - .env/vars
+    entrypoint: ""
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+      - api
+  celery_beat:
+    build: .
+    command: celery -A choose_one beat -l info
+    env_file:
+      - .env/vars
+    entrypoint: ""
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+      - api
+  postgres:
+    image: postgres:latest
+    restart: always
+    env_file:
+      - .env/vars
+    volumes:
+      - ./.data/postgres:/var/lib/postgresql/data
+  redis:
+    image: redis:latest
+    env_file:
+      - .env/vars
+    volumes:
+      - ./.data/redis:/data
+  nginx:
+    image: nginx:latest
+    restart: always
+    ports:
+      - 80:80
+    env_file:
+      - .env/vars
+    volumes:
+      - ./.conf/nginx:/etc/nginx/conf.d
+      - ./assets:/app/assets
+      - ./media:/app/media
+    depends_on:
+      - api

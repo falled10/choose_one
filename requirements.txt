@@ -1,0 +1,17 @@
+argon2-cffi
+Django
+djangorestframework
+drf-yasg
+django-filter
+celery
+markdown
+coreapi
+pygments
+djangorestframework-simplejwt
+djangorestframework-camel-case
+django-cors-headers
+gunicorn
+psycopg2-binary
+flake8
+mixer
+coverage
