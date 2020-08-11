@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, password=None):
+    def create_user(self, email, username, password=None):
         """Creates and saves a User with the given email, date of
         birth and password.
         """
@@ -14,18 +14,20 @@ class UserManager(BaseUserManager):
 
         user = self.model(
             email=self.normalize_email(email),
+            username=username
         )
 
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, password):
+    def create_superuser(self, email, username, password):
         """Creates and saves a superuser with the given email, date of
         birth and password.
         """
         user = self.create_user(
             email,
+            username=username,
             password=password,
         )
         user.is_staff = True
@@ -57,13 +59,14 @@ class User(AbstractBaseUser, PermissionsMixin):
                                        help_text=_('Designates that this user has all permissions without '
                                                    'explicitly assigning them.'),
                                        verbose_name=_('is superuser'))
+    username = models.CharField(max_length=255, unique=True)
 
     date_joined = models.DateTimeField(auto_now_add=True, verbose_name=_('date joined'))
 
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['username', ]
 
     def __str__(self):
         return f"{self.id}, {self.email}"
