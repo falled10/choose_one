@@ -5,3 +5,4 @@
 ### Added
 
 * Initialize project
+* Sign Up logic

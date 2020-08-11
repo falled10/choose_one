@@ -5,6 +5,7 @@ from rest_framework import serializers
 
 from authentication.models import User
 from authentication.tokens import TokenGenerator
+from choose_one.tasks import send_email
 
 
 class SignUpSerializer(serializers.ModelSerializer):
@@ -21,8 +22,17 @@ class SignUpSerializer(serializers.ModelSerializer):
 
         token = f'{urlsafe_base64_encode(force_bytes(user.email))}.{TokenGenerator.make_token(user)}'
         url = f'{settings.USER_ACTIVATION_URL}?token={token}'
-        # TODO: send email using above url
-
+        context = {
+            'url': url,
+            'email': user.email
+        }
+        template = 'notifications/activate_user.html'
+        send_email.delay(
+            subject="Activate your ChooseOne account",
+            template=template,
+            recipients=[user.email],
+            context=context
+        )
         return user
 
 

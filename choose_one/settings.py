@@ -15,7 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
@@ -33,7 +32,6 @@ if _host:
     ALLOWED_HOSTS.append(_host)
 
 AUTH_USER_MODEL = 'authentication.User'
-
 
 # Application definition
 
@@ -68,8 +66,7 @@ ROOT_URLCONF = 'choose_one.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
-        ,
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -84,7 +81,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'choose_one.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
@@ -98,7 +94,6 @@ DATABASES = {
         'PORT': os.environ.get('DB_PORT', ''),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -117,7 +112,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
@@ -196,7 +190,6 @@ LOGGING = {
     },
 }
 
-
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
@@ -234,7 +227,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 API_VERSION = os.environ.get('API_VERSION', '')
 
-
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': datetime.timedelta(
         hours=int(os.environ.get('ACCESS_TOKEN_LIFETIME_HOURS', 0)),
@@ -265,8 +257,8 @@ SWAGGER_SETTINGS = {
             'type': 'apiKey',
             'name': 'Authorization',
             'in': 'header'
-          }
-       }
+        }
+    }
 }
 
 CORS_ORIGIN_ALLOW_ALL = os.environ.get('CORS_ALLOW_ALL', '')
@@ -288,3 +280,7 @@ CELERY_TASK_DEFAULT_QUEUE = "django"
 CELERY_TASK_SOFT_TIME_LIMIT = int(os.environ.get('TASK_SOFT_TIME_LIMIT_SEC', 40))
 
 USER_ACTIVATION_URL = os.environ.get('USER_ACTIVATION_URL', 'http://localhost')
+
+MAILJET_PUBLIC_KEY = os.environ.get('MAILJET_PUBLIC_KEY', '')
+MAILJET_SECRET_KEY = os.environ.get('MAILJET_SECRET_KEY', '')
+MAILJET_USER = os.environ.get('MAILJET_USER', '')

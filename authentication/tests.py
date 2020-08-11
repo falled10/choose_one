@@ -1,7 +1,12 @@
+from unittest.mock import patch
+
 from django.urls import reverse
 from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
 
 from authentication.models import User
+from authentication.tokens import TokenGenerator
 from choose_one.tests import BaseAPITest
 
 
@@ -59,7 +64,8 @@ class APITestRefreshJSONWebToken(BaseAPITest):
 
 class TestSignUpView(BaseAPITest):
 
-    def test_register_new_user(self):
+    @patch('choose_one.tasks.send_email.delay')
+    def test_register_new_user(self, send):
         data = {
             'email': 'test@mail.com',
             'username': 'testuser',
@@ -68,8 +74,10 @@ class TestSignUpView(BaseAPITest):
         resp = self.client.post(reverse('authentication:auth-register'), data=data)
         self.assertEqual(resp.status_code, 201)
         self.assertEqual(User.objects.count(), 1)
+        send.assert_called_once()
 
-    def test_register_with_invalid_data(self):
+    @patch('choose_one.tasks.send_email.delay')
+    def test_register_with_invalid_data(self, send):
         data = {
             'email': 'something',
             'username': '',
@@ -77,8 +85,10 @@ class TestSignUpView(BaseAPITest):
         }
         resp = self.client.post(reverse('authentication:auth-register'), data=data)
         self.assertEqual(resp.status_code, 400)
+        send.assert_not_called()
 
-    def test_register_user_with_already_existed_email(self):
+    @patch('choose_one.tasks.send_email.delay')
+    def test_register_user_with_already_existed_email(self, send):
         user = self.create_and_login()
         data = {
             'email': user.email,
@@ -86,4 +96,36 @@ class TestSignUpView(BaseAPITest):
             'password': 'testpass123'
         }
         resp = self.client.post(reverse('authentication:auth-register'), data=data)
+        self.assertEqual(resp.status_code, 400)
+        send.assert_not_called()
+
+
+class TestUserActivation(BaseAPITest):
+    def setUp(self):
+        self.user = self.create()
+        self.user.is_active = False
+        self.user.save()
+
+    def test_user_activation(self):
+        token = f"{urlsafe_base64_encode(force_bytes(self.user.email))}.{TokenGenerator.make_token(self.user)}"
+        resp = self.client.post(reverse('authentication:auth-activate'), data={'token': token})
+        self.user.refresh_from_db()
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue(self.user.is_active)
+
+    def test_user_activation_returns_access_token(self):
+        token = f"{urlsafe_base64_encode(force_bytes(self.user.email))}.{TokenGenerator.make_token(self.user)}"
+        resp = self.client.post(reverse('authentication:auth-activate'), data={'token': token})
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue('access_token' in resp.data.keys())
+        self.assertTrue('refresh_token' in resp.data.keys())
+
+    def test_user_activation_wrong_uid(self):
+        token = f"something.{TokenGenerator.make_token(self.user)}"
+        resp = self.client.post(reverse('authentication:auth-activate'), data={'token': token})
+        self.assertEqual(resp.status_code, 400)
+
+    def test_user_activation_wrong_token(self):
+        token = f"{urlsafe_base64_encode(force_bytes(self.user.email))}.something"
+        resp = self.client.post(reverse('authentication:auth-activate'), data={'token': token})
         self.assertEqual(resp.status_code, 400)

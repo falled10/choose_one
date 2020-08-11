@@ -32,6 +32,12 @@ HOST=
 
 CORS_ORIGINS=localhost,127.0.0.1,0.0.0.0
 CORS_ALLOW_ALL=False
+
+USER_ACTIVATION_URL=http://localhost/
+
+MAILJET_PUBLIC_KEY=
+MAILJET_SECRET_KEY=
+MAILJET_USER=
 ```
 
 ### Description
@@ -59,6 +65,11 @@ CORS_ALLOW_ALL=False
 * `HOST` - host of the site to include in `ALLOWED_HOSTS` constant
 * `CORS_ORIGINS` - comma separated list of cors-allowed origins
 * `CORS_ALLOW_ALL` - allow all origins. **NOTE** Use only for debug
+* `USER_ACTIVATION_URL` - url that user will use for activation
+
+* `MAILJET_PUBLIC_KEY` - mailjet public key
+* `MAILJET_SECRET_KEY` - mailjet secret key
+* `MAILJET_USER` - mailjet user
 purposes! Don't set it in `True` in production
 
 ## Test environment
