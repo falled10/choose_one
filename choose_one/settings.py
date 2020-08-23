@@ -267,13 +267,6 @@ CORS_ORIGIN_ALLOW_ALL = True if CORS_ORIGIN_ALLOW_ALL == "True" else False
 
 CORS_ORIGIN_WHITELIST = os.environ.get('CORS_ORIGINS', '').split(',')
 
-# EMAIL
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = os.environ.get('EMAIL_USER', '')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD', '')
-EMAIL_PORT = 587
-
 # CELERY
 CELERY_BROKER_URL = os.environ.get('BROKER_URL', '')
 CELERY_TASK_DEFAULT_QUEUE = "django"
@@ -281,6 +274,7 @@ CELERY_TASK_DEFAULT_QUEUE = "django"
 CELERY_TASK_SOFT_TIME_LIMIT = int(os.environ.get('TASK_SOFT_TIME_LIMIT_SEC', 40))
 
 USER_ACTIVATION_URL = os.environ.get('USER_ACTIVATION_URL', 'http://localhost')
+PASSWORD_RESET_URL = os.environ.get('PASSWORD_RESET_URL', 'http://localhost')
 
 MAILJET_PUBLIC_KEY = os.environ.get('MAILJET_PUBLIC_KEY', '')
 MAILJET_SECRET_KEY = os.environ.get('MAILJET_SECRET_KEY', '')
