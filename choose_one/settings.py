@@ -12,6 +12,11 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 import datetime
 import os
 
+from environs import Env
+
+env = Env()
+env.read_env('.env/vars')
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -19,14 +24,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('APP_SECRET', '')
+SECRET_KEY = env.str('APP_SECRET', '')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG_MODE', False)
+DEBUG = env.bool('DEBUG_MODE', False)
 
 ALLOWED_HOSTS = []
 
-_host = os.environ.get('HOST', None)
+_host = env.str('HOST', None)
 
 if _host:
     ALLOWED_HOSTS.append(_host)
@@ -88,11 +93,11 @@ WSGI_APPLICATION = 'choose_one.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('POSTGRES_DB', ''),
-        'USER': os.environ.get('POSTGRES_USER', ''),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', ''),
-        'HOST': os.environ.get('DB_HOST', ''),
-        'PORT': os.environ.get('DB_PORT', ''),
+        'NAME': env.str('POSTGRES_DB', ''),
+        'USER': env.str('POSTGRES_USER', ''),
+        'PASSWORD': env.str('POSTGRES_PASSWORD', ''),
+        'HOST': env.str('DB_HOST', ''),
+        'PORT': env.str('DB_PORT', ''),
     }
 }
 
@@ -137,10 +142,10 @@ PASSWORD_HASHERS = [
 ]
 
 # Logging
-DJANGO_LOGFILE_NAME = os.environ.get('DJANGO_LOG_PATH', os.path.join(BASE_DIR, '.data/django/choose_one.log'))
+DJANGO_LOGFILE_NAME = env.str('DJANGO_LOG_PATH', os.path.join(BASE_DIR, '.data/django/choose_one.log'))
 LOGFILE_SIZE = 5 * 1024 * 1024
 
-CELERY_LOGFILE_NAME = os.environ.get('CELERY_LOG_PATH', os.path.join(BASE_DIR, '.data/django/celery.log'))
+CELERY_LOGFILE_NAME = env.str('CELERY_LOG_PATH', os.path.join(BASE_DIR, '.data/django/celery.log'))
 
 if not os.path.exists(os.path.dirname(DJANGO_LOGFILE_NAME)):
     os.makedirs(os.path.dirname(DJANGO_LOGFILE_NAME))
@@ -226,14 +231,14 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'assets')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-API_VERSION = os.environ.get('API_VERSION', '')
+API_VERSION = env.str('API_VERSION', '')
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': datetime.timedelta(
-        hours=int(os.environ.get('ACCESS_TOKEN_LIFETIME_HOURS', 0)),
-        minutes=int(os.environ.get('ACCESS_TOKEN_LIFETIME_MINUTES', 20)),
+        hours=env.int('ACCESS_TOKEN_LIFETIME_HOURS', 0),
+        minutes=env.int('ACCESS_TOKEN_LIFETIME_MINUTES', 20),
     ),
-    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=int(os.environ.get('REFRESH_TOKEN_LIFETIME_DAYS', 7))),
+    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=env.int('REFRESH_TOKEN_LIFETIME_DAYS', 7)),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': False,
 
@@ -262,20 +267,19 @@ SWAGGER_SETTINGS = {
     }
 }
 
-CORS_ORIGIN_ALLOW_ALL = os.environ.get('CORS_ALLOW_ALL', '')
-CORS_ORIGIN_ALLOW_ALL = True if CORS_ORIGIN_ALLOW_ALL == "True" else False
+CORS_ORIGIN_ALLOW_ALL = env.bool('CORS_ALLOW_ALL', False)
 
-CORS_ORIGIN_WHITELIST = os.environ.get('CORS_ORIGINS', '').split(',')
+CORS_ORIGIN_WHITELIST = env.list('CORS_ORIGINS', '')
 
 # CELERY
-CELERY_BROKER_URL = os.environ.get('BROKER_URL', '')
+CELERY_BROKER_URL = env.str('BROKER_URL', '')
 CELERY_TASK_DEFAULT_QUEUE = "django"
 
-CELERY_TASK_SOFT_TIME_LIMIT = int(os.environ.get('TASK_SOFT_TIME_LIMIT_SEC', 40))
+CELERY_TASK_SOFT_TIME_LIMIT = env.int('TASK_SOFT_TIME_LIMIT_SEC', 40)
 
-USER_ACTIVATION_URL = os.environ.get('USER_ACTIVATION_URL', 'http://localhost')
-PASSWORD_RESET_URL = os.environ.get('PASSWORD_RESET_URL', 'http://localhost')
+USER_ACTIVATION_URL = env.url('USER_ACTIVATION_URL', 'http://localhost')
+PASSWORD_RESET_URL = env.url('PASSWORD_RESET_URL', 'http://localhost')
 
-MAILJET_PUBLIC_KEY = os.environ.get('MAILJET_PUBLIC_KEY', '')
-MAILJET_SECRET_KEY = os.environ.get('MAILJET_SECRET_KEY', '')
-MAILJET_USER = os.environ.get('MAILJET_USER', '')
+MAILJET_PUBLIC_KEY = env.str('MAILJET_PUBLIC_KEY', '')
+MAILJET_SECRET_KEY = env.str('MAILJET_SECRET_KEY', '')
+MAILJET_USER = env.str('MAILJET_USER', '')
