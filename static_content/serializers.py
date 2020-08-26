@@ -1,6 +1,3 @@
-from PIL import Image
-from io import BytesIO
-
 from django.core.files.storage import default_storage
 from rest_framework import serializers
 from rest_framework.exceptions import NotFound
