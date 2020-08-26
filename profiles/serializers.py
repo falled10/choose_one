@@ -19,11 +19,10 @@ class UserSerializer(serializers.ModelSerializer):
 class ForgetPasswordSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)
 
-    def validate(self, attrs):
-        data = super().validate(attrs)
-        if not User.objects.filter(email=data['email']).exists():
+    def validate_email(self, value):
+        if not User.objects.filter(email=value).exists():
             raise serializers.ValidationError('User with this email does not exist.')
-        return data
+        return value
 
     def send_by_email(self):
         user = User.objects.get(email=self.data['email'])
