@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## v0.4.0 - UNRELEASED
+## v0.4.0 - 26.08.2020
 
 ### Added
 
