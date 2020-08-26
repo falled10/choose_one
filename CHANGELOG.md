@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## v0.4.0 - 26.08.2020
+
+### Added
+
+* Polls logic for read, create and delete
+* Upload static content logic
+
 ## v0.3.0 - 23.08.2020
 
 ### Added
