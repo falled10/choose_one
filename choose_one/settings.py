@@ -43,6 +43,7 @@ AUTH_USER_MODEL = 'authentication.User'
 INSTALLED_APPS = [
     'authentication',
     'profiles',
+    'polls',
 
     'rest_framework',
     'corsheaders',
