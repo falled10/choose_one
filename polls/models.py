@@ -27,7 +27,7 @@ class Poll(models.Model):
 class Option(models.Model):
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE, related_name='options')
     label = models.CharField(max_length=255)
-    media = models.FileField(upload_to=upload_to)
+    media = models.FileField(upload_to=upload_to, max_length=255)
 
     class Meta:
         db_table = 'options'

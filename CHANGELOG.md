@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v0.4.1 - 27.08.2020
+
+### Changed
+
+* Max length for media field in option model
+
 ## v0.4.0 - 26.08.2020
 
 ### Added
