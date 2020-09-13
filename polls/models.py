@@ -8,8 +8,9 @@ from static_content.utils import upload_to
 
 class Poll(models.Model):
     creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='polls')
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField(unique=True, max_length=255)
     title = models.CharField(max_length=255, unique=True)
+    image = models.ImageField(upload_to=upload_to, null=True, blank=True)
     places_number = models.PositiveIntegerField()
     media_type = models.CharField(choices=MediaType.choices, max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)

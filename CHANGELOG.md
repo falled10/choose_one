@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## v0.5.0 - UNRELEASED
+
+### Changed
+
+* Logic for add new option to poll
+
+### Deleted
+
+* Logic to create poll with options
+
 ## v0.4.1 - 27.08.2020
 
 ### Changed
