@@ -14,9 +14,10 @@ class OptionSerializer(ModelFileSerializer):
         read_only_fields = ('id',)
 
     def validate(self, attrs):
+        user = self.context['request'].user
         poll = self.context['poll']
-        if poll.places_number == poll.options.count() and not self.instance:
-            raise serializers.ValidationError('Number of options should be equal to number of places')
+        if user != poll.creator:
+            raise serializers.ValidationError("You cannot add option to other user's poll")
         return attrs
 
     def create(self, validated_data):
@@ -25,18 +26,19 @@ class OptionSerializer(ModelFileSerializer):
         option = Option.objects.create(**validated_data, media=media['name'], poll=poll)
         return option
 
+    def update(self, instance, validated_data):
+        media = validated_data.pop('media', None)
+        if media:
+            validated_data['media'] = media['name']
+        return super().update(instance, validated_data)
+
 
 class PollSerializer(serializers.ModelSerializer):
     options = OptionSerializer(many=True, read_only=True)
 
     class Meta:
         model = Poll
-        fields = ('id', 'title', 'places_number', 'media_type', 'options')
-
-    def validate_places_number(self, value):
-        if value <= 0 or value % 2 != 0:
-            raise serializers.ValidationError('Places should be even number')
-        return value
+        fields = ('id', 'title', 'media_type', 'options')
 
     @transaction.atomic
     def create(self, validated_data):

@@ -2,9 +2,9 @@
 
 ## v0.5.0 - UNRELEASED
 
-### Changed
+### Added
 
-* Logic for add new option to poll
+* Option view set to make manipulations with options
 
 ### Deleted
 
