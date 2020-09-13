@@ -5,10 +5,12 @@
 ### Added
 
 * Option view set to make manipulations with options
+* Image to poll model
 
 ### Deleted
 
 * Logic to create poll with options
+* Options from poll serializer
 
 ## v0.4.1 - 27.08.2020
 

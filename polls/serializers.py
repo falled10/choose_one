@@ -33,12 +33,12 @@ class OptionSerializer(ModelFileSerializer):
         return super().update(instance, validated_data)
 
 
-class PollSerializer(serializers.ModelSerializer):
-    options = OptionSerializer(many=True, read_only=True)
+class PollSerializer(ModelFileSerializer):
+    image = FileUploadSerializer(read_only=True)
 
     class Meta:
         model = Poll
-        fields = ('id', 'title', 'media_type', 'options')
+        fields = ('id', 'title', 'media_type', 'image')
 
     @transaction.atomic
     def create(self, validated_data):

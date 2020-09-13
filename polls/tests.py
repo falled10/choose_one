@@ -14,20 +14,15 @@ class TestPollViewSet(BaseAPITest):
     def setUp(self):
         self.user = self.create_and_login()
         self.poll = mixer.blend(Poll, creator=self.user)
-        self.option = mixer.blend(Option, poll=self.poll)
         self.data = {
             'title': 'some-new-poll',
             'media_type': 'IMAGE',
         }
 
-    def tearDown(self):
-        default_storage.delete(self.option.media.name)
-
     def test_get_list_of_all_polls(self):
         resp = self.client.get(reverse('polls:polls-list'))
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.data['results'][0]['id'], self.poll.id)
-        self.assertEqual(resp.data['results'][0]['options'][0]['id'], self.option.id)
 
     def test_get_list_of_all_polls_when_logout(self):
         self.logout()
