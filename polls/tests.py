@@ -17,6 +17,7 @@ class TestPollViewSet(BaseAPITest):
         self.data = {
             'title': 'some-new-poll',
             'media_type': 'IMAGE',
+            'description': 'something about this poll'
         }
 
     def test_get_list_of_all_polls(self):

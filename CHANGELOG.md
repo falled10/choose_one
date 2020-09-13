@@ -6,6 +6,7 @@
 
 * Option view set to make manipulations with options
 * Image to poll model
+* Description to poll model
 
 ### Deleted
 
