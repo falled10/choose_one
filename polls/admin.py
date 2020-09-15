@@ -11,3 +11,4 @@ class OptionAdminInline(admin.TabularInline):
 @admin.register(Poll)
 class PollAdmin(admin.ModelAdmin):
     inlines = (OptionAdminInline,)
+    exclude = ('slug', 'places_number', 'media_type')
