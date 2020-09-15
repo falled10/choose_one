@@ -12,6 +12,7 @@
 
 * Logic to create poll with options
 * Options from poll serializer
+* Permission file, because now using build in from `rest_framework`
 
 ## v0.4.1 - 27.08.2020
 
