@@ -85,6 +85,11 @@ class TestPollViewSet(BaseAPITest):
         self.assertEqual(resp.data['count'], 1)
         self.assertEqual(resp.data['results'][0]['id'], self.poll.id)
 
+    def test_get_my_polls_when_logout(self):
+        self.logout()
+        resp = self.client.get(reverse('polls:polls-my-polls'))
+        self.assertEqual(resp.status_code, 401)
+
 
 class TestOptionViewSet(BaseAPITest):
 

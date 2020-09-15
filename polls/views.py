@@ -1,13 +1,13 @@
 from rest_framework.generics import get_object_or_404
 from rest_framework.decorators import action
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, CreateModelMixin, \
     DestroyModelMixin
 
 from choose_one.paginators import ResultSetPagination
 from polls.serializers import PollSerializer, OptionSerializer
 from polls.models import Poll, Option
-from polls.permissions import IsAuthenticatedOrReadOnly
 
 
 class PollViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin, CreateModelMixin, DestroyModelMixin):
@@ -47,7 +47,8 @@ class PollViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin, CreateMode
             return Poll.objects.filter(creator=self.request.user)
         return Poll.objects.all()
 
-    @action(detail=False, methods=['GET'], url_path='my-polls', url_name='my-polls')
+    @action(detail=False, methods=['GET'], url_path='my-polls', url_name='my-polls',
+            permission_classes=(IsAuthenticated,))
     def my_polls(self, request, *args, **kwargs):
         queryset = self.get_queryset().filter(creator=self.request.user)
         page = self.paginate_queryset(queryset)
