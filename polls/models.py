@@ -12,7 +12,7 @@ class Poll(models.Model):
     description = models.TextField(null=True, blank=True)
     title = models.CharField(max_length=255, unique=True)
     image = models.ImageField(upload_to=upload_to, null=True, blank=True)
-    places_number = models.PositiveIntegerField()
+    places_number = models.PositiveIntegerField(default=0)
     media_type = models.CharField(choices=MediaType.choices, max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
 
