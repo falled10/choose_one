@@ -38,7 +38,7 @@ class PollSerializer(ModelFileSerializer):
 
     class Meta:
         model = Poll
-        fields = ('id', 'title', 'media_type', 'description', 'image')
+        fields = ('id', 'title', 'media_type', 'description', 'image', 'slug')
 
     @transaction.atomic
     def create(self, validated_data):
