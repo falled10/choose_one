@@ -51,10 +51,50 @@ class TestPollViewSet(BaseAPITest):
         resp = self.client.get(reverse('polls:polls-detail', args=('something',)))
         self.assertEqual(resp.status_code, 404)
 
+    def test_create_new_poll(self):
+        resp = self.client.post(reverse('polls:polls-list'), data=self.data)
+        self.assertEqual(resp.status_code, 201)
+        self.assertEqual(Poll.objects.count(), 2)
+
+    def test_create_new_poll_invalid_data(self):
+        data = self.data.copy()
+        data['media_type'] = 'some other type'
+        resp = self.client.post(reverse('polls:polls-list'), data=data)
+        self.assertEqual(resp.status_code, 400)
+
     def test_create_new_poll_logout_user(self):
         self.logout()
         resp = self.client.post(reverse('polls:polls-list'), data=self.data)
         self.assertEqual(resp.status_code, 401)
+
+    def test_update_existed_poll(self):
+        resp = self.client.put(reverse('polls:polls-detail', args=(self.poll.slug,)), data=self.data)
+        self.assertEqual(resp.status_code, 200)
+        self.poll.refresh_from_db()
+        self.assertEqual(self.poll.title, self.data['title'])
+        self.assertEqual(self.poll.description, self.data['description'])
+
+    def test_update_existed_poll_invalid_data(self):
+        data = self.data.copy()
+        data['media_type'] = 'some other type'
+        resp = self.client.put(reverse('polls:polls-detail', args=(self.poll.slug,)), data=data)
+        self.assertEqual(resp.status_code, 400)
+
+    def test_update_existed_poll_from_another_user(self):
+        another_user = self.create(email='other@mail.com', username='another-user')
+        self.poll.creator = another_user
+        self.poll.save()
+        resp = self.client.put(reverse('polls:polls-detail', args=(self.poll.slug,)), data=self.data)
+        self.assertEqual(resp.status_code, 403)
+
+    def test_update_existed_poll_when_logout(self):
+        self.logout()
+        resp = self.client.put(reverse('polls:polls-detail', args=(self.poll.slug,)), data=self.data)
+        self.assertEqual(resp.status_code, 401)
+
+    def test_update_not_existed_poll(self):
+        resp = self.client.put(reverse('polls:polls-detail', args=('asdfadsf',)), data=self.data)
+        self.assertEqual(resp.status_code, 404)
 
     def test_remove_poll(self):
         resp = self.client.delete(reverse('polls:polls-detail', args=(self.poll.slug,)))

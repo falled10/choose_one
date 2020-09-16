@@ -1,16 +1,15 @@
 from rest_framework.generics import get_object_or_404
 from rest_framework.decorators import action
-from rest_framework.viewsets import GenericViewSet, ModelViewSet
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
-from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, CreateModelMixin, \
-    DestroyModelMixin
 
 from choose_one.paginators import ResultSetPagination
+from polls.permissions import IsOwnerOrReadOnly
 from polls.serializers import PollSerializer, OptionSerializer
 from polls.models import Poll, Option
 
 
-class PollViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin, CreateModelMixin, DestroyModelMixin):
+class PollViewSet(ModelViewSet):
     """
     list:
     Returns list of all available polls
@@ -40,7 +39,7 @@ class PollViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin, CreateMode
     serializer_class = PollSerializer
     lookup_field = 'slug'
     pagination_class = ResultSetPagination
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+    permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
 
     def get_queryset(self):
         if self.action == 'destroy':
