@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## v0.6.0 - UNRELEASED
+
+### Added
+
+* Possibility to update existed poll
+* Permission `IsOwnerOrReadOnly`
+
 ## v0.5.0 - 15.09.2020
 
 ### Added
