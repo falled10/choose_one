@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## v0.7.0 - UNRELEASED
+## v0.7.0 - 17.09.2020
 
 ### Deleted
 
