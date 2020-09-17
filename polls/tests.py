@@ -106,7 +106,7 @@ class TestPollViewSet(BaseAPITest):
         self.poll.creator = another_user
         self.poll.save()
         resp = self.client.delete(reverse('polls:polls-detail', args=(self.poll.slug,)))
-        self.assertEqual(resp.status_code, 404)
+        self.assertEqual(resp.status_code, 403)
 
     def test_remove_poll_logout_user(self):
         self.logout()
