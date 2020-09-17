@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v0.7.0 - UNRELEASED
+
+### Deleted
+
+* Delete handler from polls view
+
 ## v0.6.0 - 16.09.2020
 
 ### Added

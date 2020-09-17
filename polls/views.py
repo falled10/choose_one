@@ -40,11 +40,7 @@ class PollViewSet(ModelViewSet):
     lookup_field = 'slug'
     pagination_class = ResultSetPagination
     permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
-
-    def get_queryset(self):
-        if self.action == 'destroy':
-            return Poll.objects.filter(creator=self.request.user)
-        return Poll.objects.all()
+    queryset = Poll.objects.all()
 
     @action(detail=False, methods=['GET'], url_path='my-polls', url_name='my-polls',
             permission_classes=(IsAuthenticated,))
